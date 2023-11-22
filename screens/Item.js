@@ -116,7 +116,7 @@ const Item = ({ navigation }) => {
   const item = route.params?.data;
   console.log("the item is : ", item);
 
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(1);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

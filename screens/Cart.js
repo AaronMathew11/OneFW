@@ -27,7 +27,7 @@ const Cart = ({ navigation }) => {
     for (i = 0; i < cart.length; i++) {
       var numericPart = parseFloat(cart[i].price.replace(/[^0-9.]/g, "")); // Extracts numeric part
       console.log(numericPart);
-      totalNumeric += numericPart;
+      totalNumeric += (numericPart*cart[i].count);
     }
     setTotal(totalNumeric);
     console.log(total);

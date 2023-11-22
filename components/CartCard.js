@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable } from "react-native";
 import * as SQLite from "expo-sqlite";
-import Toast from 'react-native-toast-message';
+import Toast from "react-native-toast-message";
 
 const toastConfig = {
   /*
@@ -13,16 +13,15 @@ const toastConfig = {
   success: (props) => (
     <BaseToast
       {...props}
-      style={{ borderLeftColor: 'green' }}
-
+      style={{ borderLeftColor: "green" }}
       contentContainerStyle={{ paddingHorizontal: 15 }}
       text1Style={{
         fontSize: 16,
-        fontWeight: '400'
+        fontWeight: "400",
       }}
       text2Style={{
         fontSize: 13,
-        fontWeight: '400'
+        fontWeight: "400",
       }}
     />
   ),
@@ -30,21 +29,17 @@ const toastConfig = {
     <ErrorToast
       {...props}
       text1Style={{
-        fontSize: 16
+        fontSize: 16,
       }}
       text2Style={{
-        fontSize: 15
+        fontSize: 15,
       }}
     />
-  ),}
-
-
+  ),
+};
 
 const CartCard = ({ item, navigation }) => {
   const [count, setCount] = useState(item.count);
-
-
-  
 
   //database connection
   const db = SQLite.openDatabase("db.db");
@@ -71,7 +66,6 @@ const CartCard = ({ item, navigation }) => {
   //     });
   //   });
   // }, [favs]);
-
 
   return (
     <Pressable
@@ -121,10 +115,12 @@ const CartCard = ({ item, navigation }) => {
             <Pressable onPress={() => setCount(count + 1)}>
               <Ionicons name='add' size={15} color='grey' />
             </Pressable>
-            <Text style={{ fontSize: 12 }}>
-              {count}
-            </Text>
-            <Pressable onPress={() => setCount(item.count - 1)}>
+            <Text style={{ fontSize: 12 }}>{count}</Text>
+            <Pressable
+              onPress={() => {
+                if (count > 0) setCount(count - 1);
+              }}
+            >
               <Ionicons
                 name='remove'
                 size={15}
