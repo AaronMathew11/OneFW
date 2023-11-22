@@ -159,7 +159,7 @@ const Menu = ({ navigation }) => {
   const route = useRoute();
   const item= route.params?.data
 
-  const [searchQuery, setSearchQuery] = useState(item);
+  const [searchQuery, setSearchQuery] = useState("");
   const [filteredFoodItems, setFilteredFoodItems] = useState(foodItems);
 
   const handleSearch = (text) => {
@@ -167,6 +167,7 @@ const Menu = ({ navigation }) => {
   };
 
   useEffect(()=>{
+    if(item!=undefined)
     setSearchQuery(item)
   },[item])
 

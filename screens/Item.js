@@ -152,7 +152,7 @@ const Item = ({ navigation }) => {
               flexDirection: "row",
             }}
           >
-            <Pressable onPress={() => setCount(count - 1)}>
+            <Pressable onPress={() =>{if(count>0) setCount(count - 1)}}>
               <Ionicons
                 name='remove'
                 size={20}
