@@ -8,6 +8,7 @@ import Item from "../screens/Item";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Delivery from "../screens/Delivery";
+import Offer from "../screens/Offer";
 
 const Stack = createNativeStackNavigator();
 
@@ -47,6 +48,8 @@ const MainNav = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen name='Item' component={Item} />
+        <Stack.Screen name='Offer' component={Offer} />
+
       </Stack.Navigator>
     </NavigationContainer>
     // {/* </GestureHandlerRootView> */}

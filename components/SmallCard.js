@@ -12,9 +12,46 @@ const SmallCard = ({ item, navigation }) => {
   const db = SQLite.openDatabase("db.db");
 
   function toggleLike(item) {
-    setLike(like ? false : true);
-    addToFavorites(item);
+    setLike(like == true ? false : true);
   }
+
+  useEffect(() => {
+    if (like) {
+      db.transaction((tx) => {
+        tx.executeSql(
+          "INSERT INTO favorites (foodName, image, description, price) VALUES (?,?,?,?)",
+          [item.foodName, item.image, item.description, item.price], // Add all four values here
+          (txObj, results) => {
+            if (results.rowsAffected > 0) {
+              console.log("Item added to favorites", item);
+            } else {
+              console.log("Failed to add item to favorites");
+            }
+          },
+          (txObj, error) => {
+            console.log(error);
+          }
+        );
+      });
+    } else {
+      db.transaction((tx) => {
+        tx.executeSql(
+          "DELETE FROM favorites WHERE foodName = ?",
+          [item.foodName], // Add all four values here
+          (txObj, results) => {
+            if (results.rowsAffected > 0) {
+              console.log("Item added to favorites", item);
+            } else {
+              console.log("Failed to add item to favorites");
+            }
+          },
+          (txObj, error) => {
+            console.log(error);
+          }
+        );
+      });
+    }
+  }, [like]);
 
   // const [favs, setFavs] = useState(undefined);
 
@@ -39,24 +76,7 @@ const SmallCard = ({ item, navigation }) => {
   //   });
   // }, [favs]);
 
-  const addToFavorites = (item) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        "INSERT INTO favorites (foodName, image, description, price) VALUES (?,?,?,?)",
-        [item.foodName, item.image, item.description, item.price], // Add all four values here
-        (txObj, results) => {
-          if (results.rowsAffected > 0) {
-            console.log("Item added to favorites", item);
-          } else {
-            console.log("Failed to add item to favorites");
-          }
-        },
-        (txObj, error) => {
-          console.log(error);
-        }
-      );
-    });
-  };
+  const addToFavorites = (item) => {};
 
   return (
     <Pressable
@@ -113,7 +133,7 @@ const SmallCard = ({ item, navigation }) => {
               flexDirection: "row",
             }}
           >
-            <Pressable onPress={() => setCount(count + 1)}>
+            {/* <Pressable onPress={() => setCount(count + 1)}>
               <Ionicons name='add' size={15} color='grey' />
             </Pressable>
             <Text style={{ fontSize: 12 }}>
@@ -126,7 +146,7 @@ const SmallCard = ({ item, navigation }) => {
                 color='grey'
                 style={{ marginRight: 5 }}
               />
-            </Pressable>
+            </Pressable> */}
           </View>
         </View>
       </View>

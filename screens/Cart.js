@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, Image } from "react-native";
 import React, { useState, useEffect } from "react";
 import SmallCard from "../components/SmallCard";
 import { FlatList } from "react-native-gesture-handler";
@@ -16,7 +16,11 @@ const Cart = ({ navigation }) => {
 
   useEffect(() => {
     fetchCartItems(); // Fetch cart items initially
-  }, [isFocused, total]); // Run once when component mounts
+  }, [isFocused]); // Run once when component mounts
+
+  useEffect(()=>{
+    calculateTotals()
+  },[cart])
 
   const calculateTotals = () => {
     var totalNumeric = 0;
@@ -26,10 +30,11 @@ const Cart = ({ navigation }) => {
       totalNumeric += numericPart;
     }
     setTotal(totalNumeric);
+    console.log(total);
   };
 
-  const fetchCartItems = () => {
-    db.transaction((tx) => {
+  const fetchCartItems = async () => {
+    await db.transaction((tx) => {
       tx.executeSql(
         "SELECT * FROM cart",
         [],
@@ -37,92 +42,101 @@ const Cart = ({ navigation }) => {
         (txObj, error) => console.log(error)
       );
     });
-    calculateTotals();
   };
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
-      <FlatList
-        data={cart}
-        style={{ marginBottom: 190 }}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <CartCard item={item} navigation={navigation}></CartCard>
-        )}
-      />
-      <View
-        style={{
-          bottom: 0,
-          position: "absolute",
-          width: "100%",
-          paddingBottom: 20,
-          backgroundColor: "white",
-        }}
-      >
+      {cart.length != 0 && (
+        <View style={{ flex: 1, backgroundColor: "white" }}>
+          <FlatList
+            data={cart}
+            style={{ marginBottom: 190 }}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <CartCard item={item} navigation={navigation}></CartCard>
+            )}
+          />
+          <View
+            style={{
+              bottom: 0,
+              position: "absolute",
+              width: "100%",
+              paddingBottom: 20,
+              backgroundColor: "white",
+            }}
+          >
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginHorizontal: 22,
+              }}
+            >
+              <Text style={{ fontSize: 12, color: "grey" }}>Sub Total</Text>
+              <Text style={{ fontSize: 12, color: "grey" }}>{total}</Text>
+            </View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginHorizontal: 22,
+                marginTop: 7,
+              }}
+            >
+              <Text style={{ fontSize: 12, color: "grey" }}>Delivery</Text>
+              <Text style={{ fontSize: 12, color: "grey" }}>$2.00</Text>
+            </View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginHorizontal: 22,
+                marginTop: 10,
+                marginBottom: 20,
+              }}
+            >
+              <Text style={{ fontSize: 18 }}>Total</Text>
+              <Text style={{ fontSize: 18 }}>{total + 2}</Text>
+            </View>
+            <Pressable
+              style={{
+                backgroundColor: "#D82866",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingVertical: 14,
+                marginHorizontal: 20,
+                borderRadius: 10,
+              }}
+              onPress={() => navigation.navigate("Delivery")}
+            >
+              <Text style={{ color: "white" }}>Checkout</Text>
+            </Pressable>
+          </View>
+        </View>
+      )}
+      {cart.length == 0 && (
         <View
           style={{
             display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginHorizontal: 22,
-          }}
-        >
-          <Text style={{ fontSize: 12, color: "grey" }}>Sub Total</Text>
-          <Text style={{ fontSize: 12, color: "grey" }}>{total}</Text>
-        </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginHorizontal: 22,
-            marginTop: 7,
-          }}
-        >
-          <Text style={{ fontSize: 12, color: "grey" }}>Delivery</Text>
-          <Text style={{ fontSize: 12, color: "grey" }}>$2.00</Text>
-        </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginHorizontal: 22,
-            marginTop: 10,
-            marginBottom: 20,
-          }}
-        >
-          <Text style={{ fontSize: 18 }}>Total</Text>
-          <Text style={{ fontSize: 18 }}>{total + 2}</Text>
-        </View>
-        <Pressable
-          style={{
-            backgroundColor: "#D82866",
-            display: "flex",
-            justifyContent: "center",
+            flexDirection: "column",
             alignItems: "center",
-            paddingVertical: 14,
-            marginHorizontal: 20,
-            borderRadius: 10,
+            marginTop: 80,
           }}
-          onPress={() => navigation.navigate("Delivery")}
         >
-          <Text style={{ color: "white" }}>Checkout</Text>
-        </Pressable>
-      </View>
+          <Image
+            source={require("../images/emptyCart.jpg")}
+            style={{ height: 300, width: 300 }}
+          ></Image>
+          <Text style={{ marginTop: 20, fontSize: 20 }}>
+            Your Cart is Empty
+          </Text>
+        </View>
+      )}
     </View>
-    //      {checkedOut && (
-
-    //     <View>
-    //               <Pressable style={{backgroundColor:'#D82866', display:'flex', justifyContent:'center', alignItems:'center', paddingVertical:14, marginHorizontal:20, borderRadius:10}}>
-    //           <Text style={{color:'white'}}>Checkout</Text>
-    //         </Pressable>
-    //         <Pressable style={{backgroundColor:'#D82866', display:'flex', justifyContent:'center', alignItems:'center', paddingVertical:14, marginHorizontal:20, borderRadius:10}}>
-    //           <Text style={{color:'white'}}>Checkout</Text>
-    //         </Pressable>
-    //     </View>
-    //     )
-    // }
   );
 };
 

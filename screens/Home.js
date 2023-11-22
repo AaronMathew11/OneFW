@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Image } from "react-native";
+import { View, Text, Pressable, Image, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 import BigCard from "../components/BigCard";
@@ -6,7 +6,6 @@ import { useIsFocused } from "@react-navigation/native";
 
 
 const Home = ({ navigation }) => {
-  const isFocused = useIsFocused();
 
   const top = [
     {
@@ -143,7 +142,7 @@ const Home = ({ navigation }) => {
               style={{ marginRight: 20, marginLeft: 20 }}
             >
               {top.map((item, index) => (
-                <View
+                <TouchableOpacity
                   key={index}
                   style={{
                     display: "flex",
@@ -151,7 +150,10 @@ const Home = ({ navigation }) => {
                     alignItems: "center",
                     marginRight: 10,
                   }}
+                  onPress={() => navigation.navigate('Menu', { data: item.foodName })}
+
                 >
+                  
                   <Image
                     source={{ uri: item.image }}
                     style={{
@@ -163,12 +165,13 @@ const Home = ({ navigation }) => {
                   <Text style={{ marginTop: 6, color: "grey" }}>
                     {item.foodName}
                   </Text>
-                </View>
+                </TouchableOpacity>
               ))}
             </ScrollView>
           </View>
           <Pressable
             style={{ width: "100%", height: 200, paddingHorizontal: 20 }}
+            onPress={()=>navigation.navigate('Offer')}
           >
             <Image
               source={require("../images/Banner.png")}

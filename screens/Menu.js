@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import SmallCard from "../components/SmallCard";
 import { FlatList, ScrollView, TextInput } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
+import { useRoute } from "@react-navigation/native";
 import * as SQLite from "expo-sqlite";
-
 
 const foodItems = [
   {
@@ -155,83 +155,48 @@ const foodItems = [
 ];
 
 const Menu = ({ navigation }) => {
-
   const db = SQLite.openDatabase("db.db");
+  const route = useRoute();
+  const item= route.params?.data
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(item);
   const [filteredFoodItems, setFilteredFoodItems] = useState(foodItems);
 
   const handleSearch = (text) => {
     setSearchQuery(text);
-    const filteredItems = foodItems.filter((item) =>
-      item.foodName.toLowerCase().includes(text.toLowerCase())
-    );
-    setFilteredFoodItems(filteredItems);
   };
 
+  useEffect(()=>{
+    setSearchQuery(item)
+  },[item])
+
+  useEffect(() => {
+    const filteredItems = foodItems.filter((item) =>
+      item.foodName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredFoodItems(filteredItems);
+  }, [searchQuery]);
+
+
+
+
+
   // useEffect(() => {
-  //   // db.transaction((tx) => {
-  //   //   tx.executeSql(
-  //   //     `CREATE TABLE IF NOT EXISTS favorites (
-  //   //           id INTEGER PRIMARY KEY AUTOINCREMENT,
-  //   //           foodName TEXT,
-  //   //           image TEXT,
-  //   //           description TEXT,
-  //   //           price TEXT
-  //   //         );`
-  //   //   );
-
-  //     // tx.executeSql(
-  //     //   `CREATE TABLE IF NOT EXISTS cart (
-  //     //         id INTEGER PRIMARY KEY AUTOINCREMENT,
-  //     //         foodName TEXT,
-  //     //         image TEXT,
-  //     //         description TEXT,
-  //     //         price TEXT,
-  //     //         count INTEGER
-  //     //       );`
-  //     // );
-  //   // });
-
   //   db.transaction((tx) => {
   //     tx.executeSql(
-  //       `DROP TABLE IF EXISTS favorites`,
-  //       [],
-  //       () => {
-  //         tx.executeSql(
-  //           `CREATE TABLE IF NOT EXISTS favorites (
-  //             id INTEGER PRIMARY KEY AUTOINCREMENT,
-  //             foodName TEXT,
-  //             image TEXT,
-  //             description TEXT,
-  //             price TEXT
-  //           );`,
-  //           [],
-  //           () => console.log('Table favorites created successfully'),
-  //           (txObj, error) => console.log('Error creating table:', error)
-  //         );
-  //       },
-  //       (txObj, error) => console.log('Error dropping table:', error)
+  //       `CREATE TABLE IF NOT EXISTS favorites (
+  //         id INTEGER PRIMARY KEY AUTOINCREMENT,
+  //         foodName TEXT,
+  //         image TEXT,
+  //         description TEXT,
+  //         price TEXT
+  //       );`,
+  //       [], // Pass an empty array as the second parameter if there are no variables to bind
+  //       () => console.log("Table favorites created successfully"),
+  //       (txObj, error) => console.log("Error creating table:", error)
   //     );
   //   });
   // }, []);
-
-  useEffect(() => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS favorites (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          foodName TEXT,
-          image TEXT,
-          description TEXT,
-          price TEXT
-        );`,
-        [], // Pass an empty array as the second parameter if there are no variables to bind
-        () => console.log("Table favorites created successfully"),
-        (txObj, error) => console.log("Error creating table:", error)
-      );
-    });
-  }, []);
 
   return (
     <View style={{ backgroundColor: "white", flex: 1, paddingBottom: 20 }}>
@@ -275,8 +240,11 @@ const Menu = ({ navigation }) => {
             marginRight: 10,
           }}
         >
-          <Text style={{ color: "white", width: "auto", padding: 8 }}>
-            Burger
+          <Text
+            style={{ color: "white", width: "auto", padding: 8 }}
+            onPress={() => setSearchQuery("chicken")}
+          >
+            Chicken
           </Text>
         </View>
         <View
@@ -286,7 +254,10 @@ const Menu = ({ navigation }) => {
             marginRight: 10,
           }}
         >
-          <Text style={{ color: "white", width: "auto", padding: 8 }}>
+          <Text
+            style={{ color: "white", width: "auto", padding: 8 }}
+            onPress={() => setSearchQuery("pizza")}
+          >
             Pizza
           </Text>
         </View>
@@ -297,7 +268,10 @@ const Menu = ({ navigation }) => {
             marginRight: 10,
           }}
         >
-          <Text style={{ color: "white", width: "auto", padding: 8 }}>
+          <Text
+            style={{ color: "white", width: "auto", padding: 8 }}
+            onPress={() => setSearchQuery("salad")}
+          >
             Salad
           </Text>
         </View>
@@ -308,8 +282,11 @@ const Menu = ({ navigation }) => {
             marginRight: 10,
           }}
         >
-          <Text style={{ color: "white", width: "auto", padding: 8 }}>
-            Wings
+          <Text
+            style={{ color: "white", width: "auto", padding: 8 }}
+            onPress={() => setSearchQuery("Spaghetti")}
+          >
+            Pasta
           </Text>
         </View>
         <View
@@ -319,8 +296,11 @@ const Menu = ({ navigation }) => {
             marginRight: 10,
           }}
         >
-          <Text style={{ color: "white", width: "auto", padding: 8 }}>
-            Cake
+          <Text
+            style={{ color: "white", width: "auto", padding: 8 }}
+            onPress={() => setSearchQuery("sandwich")}
+          >
+            Sandwich
           </Text>
         </View>
       </View>

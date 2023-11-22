@@ -45,7 +45,7 @@ const toastConfig = {
   ),
 };
 
-const Item = ({ navigation }) => {
+const Offer = ({ navigation }) => {
   const showToast = () => {
     Toast.show({
       type: "success",
@@ -55,6 +55,30 @@ const Item = ({ navigation }) => {
     });
   };
 
+  // useEffect(() => {
+  //   db.transaction((tx) => {
+  //     tx.executeSql(
+  //       `DROP TABLE IF EXISTS cart`,
+  //       [],
+  //       () => {
+  //         tx.executeSql(
+  //           `CREATE TABLE IF NOT EXISTS cart (
+  //             id INTEGER PRIMARY KEY AUTOINCREMENT,
+  //             foodName TEXT,
+  //             image TEXT,
+  //             description TEXT,
+  //             price TEXT,
+  //             count INTEGER
+  //           );`,
+  //           [],
+  //           () => console.log("Table cart created successfully"),
+  //           (txObj, error) => console.log("Error creating table:", error)
+  //         );
+  //       },
+  //       (txObj, error) => console.log("Error dropping table:", error)
+  //     );
+  //   });
+  // }, []);
 
   const addToFavorites = (item) => {
     showToast();
@@ -110,8 +134,6 @@ const Item = ({ navigation }) => {
     },
   ];
 
-
-
   const route = useRoute();
   const item = route.params?.data;
   console.log("the item is : ", item);
@@ -122,7 +144,7 @@ const Item = ({ navigation }) => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={{ width: "100%", height: 270 }}>
         <Image
-          source={{ uri: item.image }}
+          source={require("../images/burger.png")}
           style={{
             height: undefined,
             width: undefined,
@@ -132,9 +154,16 @@ const Item = ({ navigation }) => {
         ></Image>
       </View>
       <View style={{ margin: 20 }}>
-        <Text style={{ fontSize: 18 }}>{item.foodName}</Text>
-        <Text style={{ fontSize: 12, color: "grey", marginTop: 4 }}>
-          {item.description}
+        <Text style={{ fontSize: 18, marginTop: 10 }}>
+          American Breakfast Burger
+        </Text>
+        <Text
+          style={{ fontSize: 14, color: "grey", marginTop: 25, lineHeight: 30 }}
+        >
+          Introducing our mouthwatering burger offer! For only 5 rupees, relish
+          a savory medley of seasoned patties, fresh veggies, and signature
+          sauces. Dive into a burst of flavors without breaking the bank. Grab
+          this delectable deal while it lasts!
         </Text>
         <View
           style={{
@@ -144,27 +173,7 @@ const Item = ({ navigation }) => {
             marginTop: 20,
           }}
         >
-          <Text style={{ fontSize: 18 }}>{item.price}</Text>
-          <View
-            style={{
-              display: "flex",
-              gap: 10,
-              flexDirection: "row",
-            }}
-          >
-            <Pressable onPress={() => setCount(count - 1)}>
-              <Ionicons
-                name='remove'
-                size={20}
-                color='grey'
-                style={{ marginRight: 5 }}
-              />
-            </Pressable>
-            <Text style={{ fontSize: 16, color: "grey" }}>{count}</Text>
-            <Pressable onPress={() => setCount(count + 1)}>
-              <Ionicons name='add' size={20} color='grey' />
-            </Pressable>
-          </View>
+          <Text style={{ fontSize: 18, color: "green" }}>Rs 5.00!</Text>
         </View>
       </View>
 
@@ -175,18 +184,11 @@ const Item = ({ navigation }) => {
           marginBottom: 25,
           marginLeft: 20,
         }}
-      >
-        Add Extra Ingredients
-      </Text>
-      <ScrollView style={{ paddingHorizontal: 10 }}>
-        {data.map((item, index) => (
-          <Ingredients item={item} key={index}/>
-        ))}
-      </ScrollView>
+      ></Text>
       <Pressable
         onPress={() => addToFavorites(item)}
         style={{
-          backgroundColor: "#D82866",
+          backgroundColor: "#229954",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -196,13 +198,11 @@ const Item = ({ navigation }) => {
           marginBottom: 10,
         }}
       >
-        <Text style={{ color: "white" }}>Add to Cart</Text>
+        <Text style={{ color: "white" }}>Take up the offer</Text>
       </Pressable>
-      <Toast
-        config={toastConfig}
-      />
+      <Toast config={toastConfig} />
     </GestureHandlerRootView>
   );
 };
 
-export default Item;
+export default Offer;
